@@ -1,0 +1,36 @@
+#!/bin/bash
+. cmd.sh
+. path.sh
+
+for x in exp/{mono,tri1,tri2,tri3,sgmm2_4,sgmm2_4_mmi_b0.1}/decode*; do [ -d $x ] && echo $x | grep "${1:-.*}" >/dev/null && grep Sum $x/score_*/*.sys 2>/dev/null | utils/best_wer.sh; done
+
+exit 0
+
+
+# ///////////////////////////////////////////////
+# Use caution when comparing these results with other published results.
+Full Training Set : 69 sentences / 69 sentences (Training on Test)
+Language Model : Bigram phoneme language model which is extracted from training set
+Phone : Training with 54 phonemes
+
+# monophone, deltas.
+%WER 38.9 | 69 24687 | 68.1 18.8 13.1 7.0 38.9 100.0 | -0.354 | exp/mono/decode_full/score_7/ctm_39phn.filt.sys
+
+# tri1 : first triphone system  (delta+delta-delta features)
+%WER 6.6 | 69 24687 | 94.8 2.6 2.6 1.4 6.6 100.0 | -1.164 | exp/tri1/decode_full/score_2/ctm_39phn.filt.sys
+
+# tri2 : an LDA+MLLT system
+%WER 6.2 | 69 24687 | 94.9 2.2 2.9 1.2 6.2 98.6 | -0.697 | exp/tri2/decode_full/score_3/ctm_39phn.filt.sys
+
+# tri3 : Speaker Adaptive Training (SAT) system
+%WER 5.8 | 69 24687 | 95.4 2.1 2.5 1.3 5.8 98.6 | -1.375 | exp/tri3/decode_full/score_2/ctm_39phn.filt.sys
+%WER 9.9 | 69 24687 | 92.4 3.8 3.8 2.3 9.9 100.0 | -0.886 | exp/tri3/decode_full.si/score_3/ctm_39phn.filt.sys
+
+# SGMM2 Training :
+%WER 2.1 | 69 24687 | 98.6 0.5 0.8 0.7 2.1 91.3 | -1.155 | exp/sgmm2_4/decode_full/score_2/ctm_39phn.filt.sys
+
+# SGMM2 + MMI Training :
+%WER 1.9 | 69 24687 | 98.8 0.5 0.7 0.6 1.9 87.0 | -1.255 | exp/sgmm2_4_mmi_b0.1/decode_full_it1/score_2/ctm_39phn.filt.sys
+%WER 1.8 | 69 24687 | 98.8 0.5 0.7 0.6 1.8 82.6 | -1.298 | exp/sgmm2_4_mmi_b0.1/decode_full_it2/score_2/ctm_39phn.filt.sys
+%WER 1.8 | 69 24687 | 98.8 0.5 0.7 0.6 1.8 78.3 | -1.322 | exp/sgmm2_4_mmi_b0.1/decode_full_it3/score_2/ctm_39phn.filt.sys
+%WER 1.7 | 69 24687 | 98.8 0.5 0.7 0.6 1.7 78.3 | -0.910 | exp/sgmm2_4_mmi_b0.1/decode_full_it4/score_5/ctm_39phn.filt.sys
