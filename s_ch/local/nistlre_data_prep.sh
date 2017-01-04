@@ -58,25 +58,25 @@ rm $dir/tmp_*
 # rm -rf data/tmp
 
 ## Prepare STM file for sclite:
-# for x in full; do
-  # wav-to-duration scp:data/${x}/wav.scp ark,t:data/${x}/dur.ark || exit 1
-  # awk -v dur=data/${x}/dur.ark \
-  # 'BEGIN{
-     # while(getline < dur) { durH[$1]=$2; }
-     # print ";; LABEL \"O\" \"Overall\" \"Overall\"";
-     # print ";; LABEL \"F\" \"Female\" \"Female speakers\"";
-     # print ";; LABEL \"M\" \"Male\" \"Male speakers\"";
-   # }
-   # { wav=$1; spk=gensub(/_.*/,"",1,wav); $1=""; ref=$0;
-     # gender=(substr(spk,0,1) == "f" ? "F" : "M");
-     # printf("%s 1 %s 0.0 %f <O,%s> %s\n", wav, spk, durH[wav], gender, ref);
-   # }
-  # ' data/${x}/text >data/${x}/stm || exit 1
+for x in full; do
+  wav-to-duration scp:data/${x}/wav.scp ark,t:data/${x}/dur.ark || exit 1
+  awk -v dur=data/${x}/dur.ark \
+  'BEGIN{
+     while(getline < dur) { durH[$1]=$2; }
+     print ";; LABEL \"O\" \"Overall\" \"Overall\"";
+     print ";; LABEL \"F\" \"Female\" \"Female speakers\"";
+     print ";; LABEL \"M\" \"Male\" \"Male speakers\"";
+   }
+   { wav=$1; spk=gensub(/_.*/,"",1,wav); $1=""; ref=$0;
+     gender=(substr(spk,0,1) == "f" ? "F" : "M");
+     printf("%s 1 %s 0.0 %f <O,%s> %s\n", wav, spk, durH[wav], gender, ref);
+  }
+  ' data/${x}/text >data/${x}/stm || exit 1
   ##Create dummy GLM file for sclite:
-  # echo ';; empty.glm
-  # [FAKE]     =>  %HESITATION     / [ ] __ [ ] ;; hesitation token
-  # ' > data/${x}/glm
-# done
+  echo ';; empty.glm
+  [FAKE]     =>  %HESITATION     / [ ] __ [ ] ;; hesitation token
+  ' > data/${x}/glm
+done
 
 
 echo "Data preparation succeeded"

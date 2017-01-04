@@ -41,7 +41,7 @@ feats_nj=2
 train_nj=4
 decode_nj=4
 
-stage=0
+stage=2
 
 
 if [ $stage -le 0 ]; then
@@ -49,8 +49,8 @@ if [ $stage -le 0 ]; then
     echo "                Data & Lexicon & Language Preparation  (Python3)            "
     echo ============================================================================
 
-    # nistlre=/mnt/md1/user_XXX/your_dir
-    # local/nistlre_data_prep.sh $nistlre
+    nistlre=/mnt/md1/user_XXX/your_dir
+    local/nistlre_data_prep.sh $nistlre
 
     # generate feats.scp for data/full
     featdir=mfcc
@@ -60,14 +60,14 @@ if [ $stage -le 0 ]; then
         steps/compute_cmvn_stats.sh data/$x exp/make_mfcc  $featdir/$x
     done
 
-    # local/nistlre_prepare_dict.sh
+    local/nistlre_prepare_dict.sh
 
     ## Caution below: we remove optional silence by setting "--sil-prob 0.0",
     ## in nistlre the silence appears also as a word in the dictionary and is scored.
-    # utils/prepare_lang.sh --sil-prob 0.0 --position-dependent-phones false --num-sil-states 3 \
-    #  data/local/dict "sil" data/local/lang_tmp data/lang
+    utils/prepare_lang.sh --sil-prob 0.0 --position-dependent-phones false --num-sil-states 3 \
+      data/local/dict "sil" data/local/lang_tmp data/lang
 
-    # local/nistlre_format_data.sh
+    local/nistlre_format_data.sh
 
 fi
 

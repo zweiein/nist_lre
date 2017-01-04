@@ -2,7 +2,7 @@
 . cmd.sh
 . path.sh
 
-for x in exp/{mono,tri1,tri2,tri3,sgmm2_4,sgmm2_4_mmi_b0.1}/decode*; do [ -d $x ] && echo $x | grep "${1:-.*}" >/dev/null && grep Sum $x/score_*/*.sys 2>/dev/null | utils/best_wer.sh; done
+for x in exp/{mono,tri1,tri2,tri3,sgmm2_4,sgmm2_4_mmi_b0.1,dnn4_pretrain-dbn_dnn}/decode*; do [ -d $x ] && echo $x | grep "${1:-.*}" >/dev/null && grep Sum $x/score_*/*.sys 2>/dev/null | utils/best_wer.sh; done
 
 exit 0
 
@@ -34,3 +34,6 @@ Phone : Training with 54 phonemes
 %WER 1.8 | 69 24687 | 98.8 0.5 0.7 0.6 1.8 82.6 | -1.298 | exp/sgmm2_4_mmi_b0.1/decode_full_it2/score_2/ctm_39phn.filt.sys
 %WER 1.8 | 69 24687 | 98.8 0.5 0.7 0.6 1.8 78.3 | -1.322 | exp/sgmm2_4_mmi_b0.1/decode_full_it3/score_2/ctm_39phn.filt.sys
 %WER 1.7 | 69 24687 | 98.8 0.5 0.7 0.6 1.7 78.3 | -0.910 | exp/sgmm2_4_mmi_b0.1/decode_full_it4/score_5/ctm_39phn.filt.sys
+
+# DNN + pre-training 
+%WER 4.3 | 69 24687 | 96.8 1.2 2.0 1.1 4.3 100.0 | -0.485 | exp/dnn4_pretrain-dbn_dnn/decode_full/score_4/ctm_39phn.filt.sys
