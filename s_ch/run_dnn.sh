@@ -23,9 +23,6 @@ if [ $stage -le 0 ]; then
   steps/nnet/make_fmllr_feats.sh --nj 4 --cmd "$train_cmd" \
      --transform-dir ${gmmdir}_ali \
      $dir data/full $gmmdir $dir/log $dir/data || exit 1
-     
-  # split the data : 90% train 10% cross-validation (held-out)
-  utils/subset_data_dir_tr_cv.sh $dir ${dir}_tr90 ${dir}_cv10 || exit 1
 fi
 
 if [ $stage -le 1 ]; then
